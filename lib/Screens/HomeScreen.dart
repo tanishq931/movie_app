@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:movie_app/Screens/Main_Screen.dart';
+import 'package:movie_app/UI/TextStyle.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -8,13 +10,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List colors=[
-    Colors.yellow,
-    Colors.red,
-    Colors.orange,
-    Colors.brown,
-    Colors.deepPurple
+  List _Screens=[
+    Main_Screen(),
+    Center(child: Icon(Icons.search,color: Colors.white,),),
+    Center(child: Icon(Icons.menu,color: Colors.white,),),
   ];
+  int _currindex=0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,8 +23,15 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Cine Samachaar'),
         centerTitle: true,
       ),
+      body: _Screens[_currindex],
       backgroundColor: Colors.black,
       bottomNavigationBar: GNav(
+        onTabChange: (index){
+          setState(() {
+            _currindex=index;
+          });
+        },
+        textStyle: heading(size: 15),
         padding: EdgeInsets.symmetric(vertical: 15,horizontal: 20),
         tabs:[
             GButton(

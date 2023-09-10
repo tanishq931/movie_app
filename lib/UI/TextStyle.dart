@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 
 TextStyle? heading({
   double size=20,
-  bool bold=false
+  bool bold=false,
+  Color color=Colors.white,
 }){
   return GoogleFonts.poppins(
-    fontSize: 20,
+    fontSize: size,
     fontWeight: bold?FontWeight.bold:FontWeight.normal,
-      color: Colors.white
+      color: color
 
   );
 }
