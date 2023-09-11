@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dots_indicator/dots_indicator.dart';
+
 import 'package:flutter/material.dart';
 import 'package:movie_app/UI/Partition.dart';
+import 'package:movie_app/UI/TextStyle.dart';
+import 'package:movie_app/backend/Trending.dart';
 class Main_Screen extends StatefulWidget {
   const Main_Screen({Key? key}) : super(key: key);
 
@@ -17,6 +19,7 @@ class _Main_ScreenState extends State<Main_Screen> {
     Colors.brown,
     Colors.deepPurple
   ];
+  var imgUrl='https://image.tmdb.org/t/p/original';
   int _currindex=0;
   @override
   Widget build(BuildContext context) {
@@ -29,64 +32,96 @@ class _Main_ScreenState extends State<Main_Screen> {
             children: [
               Partition('Top Airing'),
               SizedBox(height: 10),
-              Stack(
-                children: [
-                  CarouselSlider.builder(
-                   itemBuilder: (context,index,currindex){
-                     return Container(color: colors[index],);
-                     },
-                    itemCount: colors.length,
+              FutureBuilder(
+                  future: getTrending(),
+                  builder: (context,AsyncSnapshot snapshot) {
+                    if(snapshot.hasData) {
+                      var data = snapshot.data;
+                      return CarouselSlider.builder(
+                          itemBuilder: (context, index, currindex) {
+                            return Container(color: colors[index],
+                                child: Stack(
+                                  children: [
+                                    Image.network(
+                                        '$imgUrl${snapshot
+                                            .data['results'][index]['backdrop_path']}'
+                                    ),
+                                    Positioned(
+                                         bottom: 30,
+                                         left: 20,
 
-                    options: CarouselOptions(
-                      onPageChanged: (index,reason){
-                        setState(() {
-                          _currindex=index;
-                        });
-                      },
-                      viewportFraction: 1,
-                      enableInfiniteScroll: false,
-                      autoPlay: true,
-                      padEnds: false,
-                      enlargeCenterPage: true
+                                         child: Text(data['results'][index]['title'],
+                                              style: heading(color: Colors.yellow,size: 15)
+                                            )
 
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 10,
-                    left: 0,
-                    right: 0,
-                    child: DotsIndicator(
-                      dotsCount: colors.length,
-                      position: _currindex,
-                      decorator: DotsDecorator(
-                        color: Colors.grey,
-                        activeColor: Colors.blue.shade800
-                      ),),
-                  )
-                ],
-              ),
+
+                                    )
+                                  ],
+                                )
+                            );
+                          },
+                          itemCount:data.length,
+                          options: CarouselOptions(
+                            onPageChanged: (index,reason){
+                              setState(() {
+                                _currindex=index;
+                              });
+                            },
+                            enableInfiniteScroll: false,
+                            enlargeCenterPage: true,
+                            viewportFraction: 1,
+                            autoPlay: true,
+                            padEnds: true,
+                            scrollPhysics: BouncingScrollPhysics()
+
+
+                          ),
+                      );
+                    }
+                    else{
+                      return CircularProgressIndicator();
+                    }
+                  }
+                ),
               SizedBox(height: 10),
               Partition('Hot Picks For You'),
               SizedBox(height: 10),
-              CarouselSlider.builder(
-                itemBuilder: (context,index,currindex){
-                  return Container(color: colors[index],);
+              FutureBuilder(
+                future: getHotPicks(),
+                builder: (context,AsyncSnapshot snapshot){
+                  if(snapshot.hasData)
+                  {
+                    var data=snapshot.data;
+                    return CarouselSlider.builder(
+                      itemBuilder: (context, index, currindex) {
+                        return Container(color: colors[index],
+                          child:Image.network('$imgUrl${data['results'][index]['backdrop_path']}')
+                        );
+                      },
+                      itemCount: colors.length,
+                      options: CarouselOptions(
+                          height: 200,
+                          enableInfiniteScroll: false,
+                          enlargeCenterPage: true,
+
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              _currindex = index;
+                            });
+                          },
+                          viewportFraction: 1,
+
+                          padEnds: false
+
+                      ),
+                    );
+
+                }
+                  else{
+                    return Container();
+                  }
                 },
-                itemCount: colors.length,
-                options: CarouselOptions(
-                  height: 190,
-                    enableInfiniteScroll: false,
-                    enlargeCenterPage: true,
 
-                    onPageChanged: (index,reason){
-                      setState(() {
-                        _currindex=index;
-                      });
-                    },
-                    viewportFraction: 1,
-                    padEnds: false
-
-                ),
               ),
               SizedBox(height: 10),
               Partition('Action'),
@@ -203,6 +238,11 @@ class _Main_ScreenState extends State<Main_Screen> {
 
                 ),
               ),
+              TextField(onChanged: (value){
+                 setState(() {
+
+                 });
+              },)
 
 
             ],

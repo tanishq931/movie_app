@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:movie_app/Screens/Main_Screen.dart';
 import 'package:movie_app/UI/TextStyle.dart';
+import 'package:movie_app/backend/Trending.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -15,6 +16,12 @@ class _HomeScreenState extends State<HomeScreen> {
     Center(child: Icon(Icons.search,color: Colors.white,),),
     Center(child: Icon(Icons.menu,color: Colors.white,),),
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getTrending();
+  }
   int _currindex=0;
   @override
   Widget build(BuildContext context) {
