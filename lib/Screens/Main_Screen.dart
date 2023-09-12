@@ -1,9 +1,11 @@
-import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:flutter/material.dart';
+import 'package:movie_app/Screens/Details.dart';
 import 'package:movie_app/UI/Partition.dart';
 import 'package:movie_app/UI/TextStyle.dart';
-import 'package:movie_app/backend/Trending.dart';
+import 'package:movie_app/backend/backend.dart';
+import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 class Main_Screen extends StatefulWidget {
   const Main_Screen({Key? key}) : super(key: key);
 
@@ -21,8 +23,10 @@ class _Main_ScreenState extends State<Main_Screen> {
   ];
   var imgUrl='https://image.tmdb.org/t/p/original';
   int _currindex=0;
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Padding(
@@ -30,52 +34,88 @@ class _Main_ScreenState extends State<Main_Screen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Partition('Top Airing'),
-              SizedBox(height: 10),
+              Partition(
+                  'Top Airing',onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Details()));
+              }),
               FutureBuilder(
                   future: getTrending(),
                   builder: (context,AsyncSnapshot snapshot) {
                     if(snapshot.hasData) {
                       var data = snapshot.data;
-                      return CarouselSlider.builder(
-                          itemBuilder: (context, index, currindex) {
-                            return Container(color: colors[index],
-                                child: Stack(
-                                  children: [
-                                    Image.network(
-                                        '$imgUrl${snapshot
-                                            .data['results'][index]['backdrop_path']}'
-                                    ),
-                                    Positioned(
-                                         bottom: 30,
-                                         left: 20,
+                      return Stack(
+                        children: [
+                          CarouselSlider.builder(
 
-                                         child: Text(data['results'][index]['title'],
-                                              style: heading(color: Colors.yellow,size: 15)
-                                            )
+                              itemBuilder: (context, index, currindex) {
+                                return InkWell(
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Details()));
+                                  },
+                                  child: Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(10),
+                                            child: Image.network(
+                                                '$imgUrl${snapshot
+                                                    .data['results'][index]['backdrop_path']}'
+                                            ),
+                                          ),
+                                          Positioned(
+                                              bottom: 25,
+                                               left: 0,
 
+                                               child: Container(
 
-                                    )
-                                  ],
-                                )
-                            );
-                          },
-                          itemCount:data.length,
-                          options: CarouselOptions(
-                            onPageChanged: (index,reason){
-                              setState(() {
-                                _currindex=index;
-                              });
-                            },
-                            enableInfiniteScroll: false,
-                            enlargeCenterPage: true,
-                            viewportFraction: 1,
-                            autoPlay: true,
-                            padEnds: true,
-                            scrollPhysics: BouncingScrollPhysics()
+                                                 decoration: BoxDecoration(
+                                                   color: Color(0xffffef00),
+                                                   borderRadius: BorderRadius.only(topRight: Radius.circular(5),bottomRight: Radius.circular(5))
+                                                 ),
+                                                 child:  Text(
+                                                     '  ${data['results'][index]['title']}   ',
+
+                                                     style: title(size: 18,bold: true,color: Colors.black)
+                                                 ),
+                                               )
 
 
+                                          ),
+
+                                        ],
+                                      ),
+                                );
+                              },
+                              itemCount:7,
+                              options: CarouselOptions(
+                                onPageChanged: (index,reason){
+                                  setState(() {
+
+                                  _currindex=index;
+                                  print(_currindex);
+                                  });
+                                },
+
+                                enlargeCenterPage: true,
+                                viewportFraction: 1,
+                                autoPlay: true,
+                                padEnds: true,
+                                enableInfiniteScroll: false,
+                                // autoPlayAnimationDuration: Duration(seconds: 2),
+                                scrollPhysics: BouncingScrollPhysics()
+                              ),
                           ),
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            child: PageViewDotIndicator(
+                              count: 7, currentItem: _currindex,
+                              selectedColor: Colors.deepPurple,unselectedColor: Colors.white,
+
+
+                            ))
+
+                        ],
                       );
                     }
                     else{
@@ -83,9 +123,7 @@ class _Main_ScreenState extends State<Main_Screen> {
                     }
                   }
                 ),
-              SizedBox(height: 10),
               Partition('Hot Picks For You'),
-              SizedBox(height: 10),
               FutureBuilder(
                 future: getHotPicks(),
                 builder: (context,AsyncSnapshot snapshot){
@@ -94,13 +132,41 @@ class _Main_ScreenState extends State<Main_Screen> {
                     var data=snapshot.data;
                     return CarouselSlider.builder(
                       itemBuilder: (context, index, currindex) {
-                        return Container(color: colors[index],
-                          child:Image.network('$imgUrl${data['results'][index]['backdrop_path']}')
+                        return Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                  '$imgUrl${snapshot
+                                      .data['results'][index]['backdrop_path']}'
+                              ),
+                            ),
+                            Positioned(
+                                bottom: 15,
+                                left: 0,
+
+                                child: Container(
+
+
+                                  decoration: BoxDecoration(
+                                      color: Color(0xffffef00),
+                                      borderRadius: BorderRadius.only(topRight: Radius.circular(5),bottomRight: Radius.circular(5))
+                                  ),
+                                  child:  Text(
+                                      '  ${data['results'][index]['title']}   ',
+
+                                      style: title(size: 18,bold: true,color: Colors.black)
+                                  ),
+                                )
+
+
+                            )
+                          ],
                         );
                       },
                       itemCount: colors.length,
                       options: CarouselOptions(
-                          height: 200,
+
                           enableInfiniteScroll: false,
                           enlargeCenterPage: true,
 
@@ -110,6 +176,8 @@ class _Main_ScreenState extends State<Main_Screen> {
                             });
                           },
                           viewportFraction: 1,
+                          autoPlay: true,
+                          autoPlayAnimationDuration:Duration(seconds: 2),
 
                           padEnds: false
 
@@ -118,131 +186,293 @@ class _Main_ScreenState extends State<Main_Screen> {
 
                 }
                   else{
-                    return Container();
+                    return SizedBox(height: 200);
                   }
                 },
 
               ),
-              SizedBox(height: 10),
               Partition('Action'),
-              CarouselSlider.builder(
-                itemBuilder: (context,index,currindex){
-                  return Container(margin: EdgeInsets.all(10),color: colors[index],);
+              FutureBuilder(
+                future: getGenre(28),
+                builder: (context,AsyncSnapshot snapshot){
+                  if(snapshot.hasData){
+                    var data=snapshot.data;
+                    return CarouselSlider.builder(
+                      itemBuilder: (context,index,currindex){
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: Container(
+
+
+                            child: Image.network('$imgUrl${data['results'][index]['poster_path']}'),
+                          ),
+                        );
+                      },
+                      itemCount: colors.length,
+                      options: CarouselOptions(
+
+
+                          enableInfiniteScroll: false,
+
+
+                          onPageChanged: (index,reason){
+                            setState(() {
+                              _currindex=index;
+                            });
+                          },
+                          viewportFraction: 0.4,
+                          padEnds: false
+
+                      ),
+                    );
+                  }
+                  else{
+                    return SizedBox(height: 100);
+                  }
                 },
-                itemCount: colors.length,
-                options: CarouselOptions(
-                    height: 190,
-
-                    enableInfiniteScroll: false,
-
-
-                    onPageChanged: (index,reason){
-                      setState(() {
-                        _currindex=index;
-                      });
-                    },
-                    viewportFraction: 0.4,
-                    padEnds: false
-
-                ),
               ),
-              SizedBox(height: 10),
               Partition('Drama'),
-              CarouselSlider.builder(
-                itemBuilder: (context,index,currindex){
-                  return Container(margin: EdgeInsets.all(10),color: colors[index],);
+              FutureBuilder(
+                future: getGenre(18),
+                builder: (context,AsyncSnapshot snapshot){
+                  if(snapshot.hasData){
+                    var data=snapshot.data;
+                    return CarouselSlider.builder(
+                      itemBuilder: (context,index,currindex){
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: Container(
+
+
+                            child: Image.network('$imgUrl${data['results'][index]['poster_path']}'),
+                          ),
+                        );
+                      },
+                      itemCount: colors.length,
+                      options: CarouselOptions(
+                          height: 190,
+
+                          enableInfiniteScroll: false,
+
+
+                          onPageChanged: (index,reason){
+                            setState(() {
+                              _currindex=index;
+                            });
+                          },
+                          viewportFraction: 0.4,
+                          padEnds: false
+
+                      ),
+                    );
+                  }
+                  else{
+                    return SizedBox(height: 100);
+                  }
                 },
-                itemCount: colors.length,
-                options: CarouselOptions(
-                    height: 190,
-
-                    enableInfiniteScroll: false,
-
-
-                    onPageChanged: (index,reason){
-                      setState(() {
-                        _currindex=index;
-                      });
-                    },
-                    viewportFraction: 0.4,
-                    padEnds: false
-
-                ),
               ),
-              SizedBox(height: 10),
-              Partition('Adventure'),
-              CarouselSlider.builder(
-                itemBuilder: (context,index,currindex){
-                  return Container(margin: EdgeInsets.all(10),color: colors[index],);
+              Partition('Animation'),
+              FutureBuilder(
+                future: getGenre(16),
+                builder: (context,AsyncSnapshot snapshot){
+                  if(snapshot.hasData){
+                    var data=snapshot.data;
+                    return CarouselSlider.builder(
+                      itemBuilder: (context,index,currindex){
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: Container(
+
+
+                            child: Image.network('$imgUrl${data['results'][index]['poster_path']}'),
+                          ),
+                        );
+                      },
+                      itemCount: colors.length,
+                      options: CarouselOptions(
+                          height: 190,
+
+                          enableInfiniteScroll: false,
+
+
+                          onPageChanged: (index,reason){
+                            setState(() {
+                              _currindex=index;
+                            });
+                          },
+                          viewportFraction: 0.4,
+                          padEnds: false
+
+                      ),
+                    );
+                  }
+                  else{
+                    return SizedBox(height: 100);
+                  }
                 },
-                itemCount: colors.length,
-                options: CarouselOptions(
-                    height: 190,
-
-                    enableInfiniteScroll: false,
-
-
-                    onPageChanged: (index,reason){
-                      setState(() {
-                        _currindex=index;
-                      });
-                    },
-                    viewportFraction: 0.4,
-                    padEnds: false
-
-                ),
               ),
-              SizedBox(height: 10),
               Partition('Sci-fi'),
-              CarouselSlider.builder(
-                itemBuilder: (context,index,currindex){
-                  return Container(margin: EdgeInsets.all(10),color: colors[index],);
+              FutureBuilder(
+                future: getGenre(878),
+                builder: (context,AsyncSnapshot snapshot){
+                  if(snapshot.hasData){
+                    var data=snapshot.data;
+                    return CarouselSlider.builder(
+                      itemBuilder: (context,index,currindex){
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: Container(
+
+
+                            child: Image.network('$imgUrl${data['results'][index]['poster_path']}'),
+                          ),
+                        );
+                      },
+                      itemCount: colors.length,
+                      options: CarouselOptions(
+                          height: 190,
+
+                          enableInfiniteScroll: false,
+
+
+                          onPageChanged: (index,reason){
+                            setState(() {
+                              _currindex=index;
+                            });
+                          },
+                          viewportFraction: 0.4,
+                          padEnds: false
+
+                      ),
+                    );
+                  }
+                  else{
+                    return SizedBox(height: 100);
+                  }
                 },
-                itemCount: colors.length,
-                options: CarouselOptions(
-                    height: 190,
-
-                    enableInfiniteScroll: false,
-
-
-                    onPageChanged: (index,reason){
-                      setState(() {
-                        _currindex=index;
-                      });
-                    },
-                    viewportFraction: 0.4,
-                    padEnds: false
-
-                ),
               ),
-              SizedBox(height: 10),
               Partition('Mystery'),
-              CarouselSlider.builder(
-                itemBuilder: (context,index,currindex){
-                  return Container(margin: EdgeInsets.all(10),color: colors[index],);
+              FutureBuilder(
+                future: getGenre(9648),
+                builder: (context,AsyncSnapshot snapshot){
+                  if(snapshot.hasData){
+                    var data=snapshot.data;
+                    return CarouselSlider.builder(
+                      itemBuilder: (context,index,currindex){
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: Container(
+
+
+                            child: Image.network('$imgUrl${data['results'][index]['poster_path']}'),
+                          ),
+                        );
+                      },
+                      itemCount: colors.length,
+                      options: CarouselOptions(
+                          height: 190,
+
+                          enableInfiniteScroll: false,
+
+
+                          onPageChanged: (index,reason){
+                            setState(() {
+                              _currindex=index;
+                            });
+                          },
+                          viewportFraction: 0.4,
+                          padEnds: false
+
+                      ),
+                    );
+                  }
+                  else{
+                    return SizedBox(height: 100);
+                  }
                 },
-                itemCount: colors.length,
-                options: CarouselOptions(
-                    height: 190,
-
-                    enableInfiniteScroll: false,
-
-
-                    onPageChanged: (index,reason){
-                      setState(() {
-                        _currindex=index;
-                      });
-                    },
-                    viewportFraction: 0.4,
-                    padEnds: false
-
-                ),
               ),
-              TextField(onChanged: (value){
-                 setState(() {
+              Partition('Adventure'),
+              FutureBuilder(
+                future: getGenre(12),
+                builder: (context,AsyncSnapshot snapshot){
+                  if(snapshot.hasData){
+                    var data=snapshot.data;
+                    return CarouselSlider.builder(
+                      itemBuilder: (context,index,currindex){
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: Container(
 
-                 });
-              },)
+
+                            child: Image.network('$imgUrl${data['results'][index]['poster_path']}'),
+                          ),
+                        );
+                      },
+                      itemCount: colors.length,
+                      options: CarouselOptions(
+                          height: 190,
+
+                          enableInfiniteScroll: false,
+
+
+                          onPageChanged: (index,reason){
+                            setState(() {
+                              _currindex=index;
+                            });
+                          },
+                          viewportFraction: 0.4,
+                          padEnds: false
+
+                      ),
+                    );
+                  }
+                  else{
+                    return SizedBox(height: 100);
+                  }
+                },
+              ),
+              Partition('Horror'),
+              FutureBuilder(
+                future: getGenre(27),
+                builder: (context,AsyncSnapshot snapshot){
+                  if(snapshot.hasData){
+                    var data=snapshot.data;
+                    return CarouselSlider.builder(
+                      itemBuilder: (context,index,currindex){
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: Container(
+
+
+                            child: Image.network('$imgUrl${data['results'][index]['poster_path']}'),
+                          ),
+                        );
+                      },
+                      itemCount: colors.length,
+                      options: CarouselOptions(
+                          height: 190,
+
+                          enableInfiniteScroll: false,
+
+
+                          onPageChanged: (index,reason){
+                            setState(() {
+                              _currindex=index;
+                            });
+                          },
+                          viewportFraction: 0.4,
+                          padEnds: false
+
+                      ),
+                    );
+                  }
+                  else{
+                    return SizedBox(height: 100);
+                  }
+                },
+              ),
+
+
 
 
             ],
