@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:movie_app/Screens/Details.dart';
+import 'package:movie_app/Screens/ViewAll.dart';
 import 'package:movie_app/UI/Partition.dart';
 import 'package:movie_app/UI/TextStyle.dart';
 import 'package:movie_app/backend/backend.dart';
@@ -22,7 +22,7 @@ class _Main_ScreenState extends State<Main_Screen> {
     Colors.deepPurple
   ];
   var imgUrl='https://image.tmdb.org/t/p/original';
-  int _currindex=0;
+  var _currindex=0;
 
   @override
   Widget build(BuildContext context) {
@@ -34,64 +34,64 @@ class _Main_ScreenState extends State<Main_Screen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Partition(
-                  'Top Airing',onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>Details()));
-              }),
+
               FutureBuilder(
                   future: getTrending(),
                   builder: (context,AsyncSnapshot snapshot) {
                     if(snapshot.hasData) {
                       var data = snapshot.data;
-                      return Stack(
+                      return Column(
                         children: [
+                          Partition(
+                              'Top Airing',onPressed: (){
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context)=>
+                                    ViewAll(title: 'Top Airing',data: data,)));
+                          }),
                           CarouselSlider.builder(
 
-                              itemBuilder: (context, index, currindex) {
-                                return InkWell(
-                                  onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Details()));
-                                  },
-                                  child: Stack(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(10),
-                                            child: Image.network(
-                                                '$imgUrl${snapshot
-                                                    .data['results'][index]['backdrop_path']}'
-                                            ),
-                                          ),
-                                          Positioned(
-                                              bottom: 25,
-                                               left: 0,
+                            itemBuilder: (context, index, currindex) {
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => Details()));
+                                },
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.network(
+                                          '$imgUrl${data['results'][index]['backdrop_path']}'),
+                                    ),
+                                    Positioned(
+                                        bottom: 25,
+                                        left: 0,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Color(0xffffef00),
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(5),
+                                                  bottomRight: Radius.circular(5))),
+                                          child: Text(
+                                              '  ${data['results'][index]['title']}   ',
+                                              style: title(
+                                                  size: 18,
+                                                  bold: true,
+                                                  color: Colors.black)),
+                                        )),
+                                  ],
+                                ),
+                              );
 
-                                               child: Container(
 
-                                                 decoration: BoxDecoration(
-                                                   color: Color(0xffffef00),
-                                                   borderRadius: BorderRadius.only(topRight: Radius.circular(5),bottomRight: Radius.circular(5))
-                                                 ),
-                                                 child:  Text(
-                                                     '  ${data['results'][index]['title']}   ',
-
-                                                     style: title(size: 18,bold: true,color: Colors.black)
-                                                 ),
-                                               )
-
-
-                                          ),
-
-                                        ],
-                                      ),
-                                );
-                              },
-                              itemCount:7,
-                              options: CarouselOptions(
+                            },
+                            itemCount:7,
+                            options: CarouselOptions(
                                 onPageChanged: (index,reason){
                                   setState(() {
 
-                                  _currindex=index;
-                                  print(_currindex);
+                                    _currindex=index;
+                                    print(_currindex);
                                   });
                                 },
 
@@ -100,26 +100,18 @@ class _Main_ScreenState extends State<Main_Screen> {
                                 autoPlay: true,
                                 padEnds: true,
                                 enableInfiniteScroll: false,
-                                // autoPlayAnimationDuration: Duration(seconds: 2),
+                                autoPlayAnimationDuration: Duration(seconds: 2),
                                 scrollPhysics: BouncingScrollPhysics()
-                              ),
+                            ),
                           ),
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            child: PageViewDotIndicator(
-                              count: 7, currentItem: _currindex,
-                              selectedColor: Colors.deepPurple,unselectedColor: Colors.white,
-
-
-                            ))
-
                         ],
                       );
                     }
                     else{
-                      return CircularProgressIndicator();
+                      return const SizedBox(
+                        height: 200,
+
+                      );
                     }
                   }
                 ),

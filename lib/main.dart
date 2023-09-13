@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/Screens/HomeScreen.dart';
+import 'package:movie_app/Splash.dart';
 
 void main(){
   runApp(MyApp());
