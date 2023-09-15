@@ -1,6 +1,6 @@
 # movie_app
 
-A new Flutter project.
+This is a flutter based cross-platform mobile app project in which user can browse diffrent movies in diffrent genres and get details about that movie like rating,short overview,cast details,etc. This app also has search functionality where user can search for specific movie. In future we have planned to include features like voice assistance in this project.
 
 ## Getting Started
 
