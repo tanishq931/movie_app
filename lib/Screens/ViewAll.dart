@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/Screens/Details.dart';
 class ViewAll extends StatefulWidget {
-  var title;
-  dynamic data;
+  final title;
+  final data;
   ViewAll({Key? key,this.title='',this.data}) : super(key: key);
 
   @override
@@ -12,13 +12,13 @@ class ViewAll extends StatefulWidget {
 class _ViewAllState extends State<ViewAll> {
 
   _ViewAllState({this.data,this.title});
-   var data;
-   var title;
+  var data;
+  var title;
 
   @override
   Widget build(BuildContext context) {
-    int counter=0;
-    var width=MediaQuery.of(context).size.width-30;
+
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -31,24 +31,24 @@ class _ViewAllState extends State<ViewAll> {
         child: GridView.builder(
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 118,
-               crossAxisSpacing: 10,
-              mainAxisExtent: 180,
-              mainAxisSpacing: 10
+                crossAxisSpacing: 10,
+                mainAxisExtent: 180,
+                mainAxisSpacing: 10
             ),
             itemCount: data.length,
             itemBuilder:(context,index){
-            return InkWell(
-              onTap: (){
-                Navigator.push(context,
-                    MaterialPageRoute(
-                        builder: (context)=>
-                            MyMovieDetailPage(data: data[index])));
-              },
-              child: Hero(
-                tag: data[index]['id'],
-                child: movies(path:data![index]['poster_path']),
-              ),
-            );
+              return InkWell(
+                onTap: (){
+                  Navigator.push(context,
+                      MaterialPageRoute(
+                          builder: (context)=>
+                              MyMovieDetailPage(data: data[index])));
+                },
+                child: Hero(
+                  tag: data[index]['id'],
+                  child: movies(path:data![index]['poster_path']),
+                ),
+              );
             }),
         // child: ListView.builder(
         //     itemCount: (data.length/3).toInt()-1,

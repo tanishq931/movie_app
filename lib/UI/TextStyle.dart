@@ -11,8 +11,8 @@ TextStyle? heading({
   return GoogleFonts.poppins(
     fontSize: size,
     fontWeight: bold?FontWeight.bold:FontWeight.normal,
-      color: color,
-     textStyle: TextStyle(overflow: TextOverflow.ellipsis,),
+    color: color,
+    textStyle: TextStyle(overflow: TextOverflow.ellipsis,),
 
   );
 }

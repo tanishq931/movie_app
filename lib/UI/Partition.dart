@@ -12,7 +12,7 @@ Widget Partition(String name,{VoidCallback? onPressed}){
           InkWell(
             onTap: onPressed,
             child: Text('  view all',style: heading(size: 14,color: Colors.blue),),
-            ),
+          ),
 
 
         ],

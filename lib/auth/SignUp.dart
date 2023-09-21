@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/auth/Login.dart';
 
@@ -21,7 +20,7 @@ class MySignUp extends StatelessWidget {
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage('assets/images/background.jpg'),colorFilter: ColorFilter.srgbToLinearGamma(),
-               fit: BoxFit.cover)
+                  fit: BoxFit.cover)
           ),
           child: Container(
             height: double.infinity,
@@ -43,7 +42,7 @@ class MySignUp extends StatelessWidget {
                               fontFamily: 'Netflix',
                               fontSize: 45,
                               fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,),
+                          textAlign: TextAlign.center,),
                       ),
                       SizedBox(height: 40,),
                       TextField(

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/Screens/HomeScreen.dart';
-import 'package:movie_app/auth/Resusable.dart';
+import 'package:movie_app/auth/Reusable.dart';
 import 'package:movie_app/auth/SignUp.dart';
 
 class MyLogin extends StatelessWidget {
@@ -36,7 +36,7 @@ class MyLogin extends StatelessWidget {
                             fontFamily: 'Netflix',
                             fontSize: 45,
                             fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,),
+                        textAlign: TextAlign.center,),
                     ),
                     SizedBox(height: 50),
                     Container(
@@ -90,7 +90,7 @@ class MyLogin extends StatelessWidget {
                                     radius: 21,
                                     backgroundColor: Colors.white,
                                     child:  Icon(Icons.phone_android,
-                                        color: Colors.black,size: 25,),
+                                      color: Colors.black,size: 25,),
                                   ),
                                 ),
 
@@ -103,7 +103,7 @@ class MyLogin extends StatelessWidget {
                                   },
                                   child: CircleAvatar(
 
-                                    radius: 21,
+                                      radius: 21,
                                       backgroundColor: Colors.white,
                                       child: Image.asset('assets/images/google.png',height: 20,)),
                                 )

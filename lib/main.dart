@@ -1,10 +1,7 @@
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/Screens/HomeScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:movie_app/Screens/ViewAll.dart';
-import 'package:movie_app/auth/Login.dart';
-
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,14 +21,15 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          appBarTheme: AppBarTheme(
+
+        appBarTheme: AppBarTheme(
 
           backgroundColor: Colors.black,
           titleTextStyle: TextStyle(color: Colors.red,fontFamily: 'Netflix',fontSize: 35,fontWeight: FontWeight.bold)
         ),
       ),
 
-      home: MyLogin()
+      home: HomeScreen()
     );
   }
 }
