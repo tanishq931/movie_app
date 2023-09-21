@@ -11,21 +11,9 @@ Widget Partition(String name,{VoidCallback? onPressed}){
           Text(name,style: heading(),),
           InkWell(
             onTap: onPressed,
-            child: Container(
-
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(15)
-
-              ),
-              child: Row(
-                children: [
-                  Text('  view all',style: heading(size: 14),),
-                  Icon(Icons.arrow_right_alt,color: Colors.white)
-                ],
-              ),
+            child: Text('  view all',style: heading(size: 14,color: Colors.blue),),
             ),
-          ),
+
 
         ],
       ),

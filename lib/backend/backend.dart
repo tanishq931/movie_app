@@ -24,3 +24,18 @@ getGenre(int genre) async{
  return movies;
 
 }
+getCast(int id) async{
+ var url='https://api.themoviedb.org/3/movie/$id?api_key=$api_key&append_to_response=credits';
+ var response = await http.get(Uri.parse(url));
+ var movies = jsonDecode(response.body);
+ return movies;
+
+}
+
+getMovieParticularGenre(int id) async{
+ var url='https://api.themoviedb.org/3/movie/$id?api_key=$api_key';
+ var response = await http.get(Uri.parse(url));
+ var movies = jsonDecode(response.body);
+ return movies;
+
+}

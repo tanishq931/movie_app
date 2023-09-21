@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         textStyle: heading(size: 15),
-        padding: EdgeInsets.only(left: 15,right: 15,bottom: 15,top: 2),
+        padding: EdgeInsets.only(left: 15,right: 15,bottom: 15,top: 15),
         tabs:[
             GButton(
               icon: Icons.home,
