@@ -5,7 +5,7 @@ import 'package:movie_app/backend/backend.dart';
 class MyMovieDetailPage extends StatefulWidget {
   MyMovieDetailPage({super.key,required this.data});
 
-  var data;
+  dynamic data;
 
 
 
