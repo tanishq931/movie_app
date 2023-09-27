@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/UI/ToastBolte.dart';
 import 'package:movie_app/auth/Login.dart';
 
 
@@ -36,7 +37,7 @@ class MySignUp extends StatelessWidget {
 
                         padding: EdgeInsets.only(left: 25,right: 25, top: 50, bottom: 30),
                         child: Text(
-                          'Register in\n Cine Samachaar ',
+                          'Cine Samachaar ',
                           style:  TextStyle(
                               color: Colors.red,
                               fontFamily: 'Netflix',
@@ -45,19 +46,6 @@ class MySignUp extends StatelessWidget {
                           textAlign: TextAlign.center,),
                       ),
                       SizedBox(height: 40,),
-                      TextField(
-                        controller: userName,
-                        decoration: InputDecoration(
-                            fillColor: Colors.grey.shade100,
-                            filled: true,
-                            hintText: 'UserName',
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(width: 10, color: Colors.red),
-                                borderRadius: BorderRadius.circular(8)
-                            )
-                        ),
-                      ),
-                      SizedBox(height: 20,),
                       TextField(
                         controller: email,
                         decoration: InputDecoration(
@@ -87,9 +75,12 @@ class MySignUp extends StatelessWidget {
                       SizedBox(height: 20),
                       ElevatedButton(
                           onPressed: (){
-                            if(userName.text.isNotEmpty && email.text.isNotEmpty && password.text.length > 6){
+                            if(email.text.isNotEmpty && password.text.length > 6){
                               FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.text, password: password.text).then((value) =>
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => MyLogin())));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => MyLogin())))
+                              .onError((error, stackTrace){
+                                return Utils().toastmsg(error.toString());
+                              });
                             }
                             else{
                               Text('All the fields are mandatory');
@@ -100,9 +91,9 @@ class MySignUp extends StatelessWidget {
                       ),
                       SizedBox(height: 20,),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text('Already have an account.', style: TextStyle(color: Colors.white),),
+                          Text('Already have an account?', style: TextStyle(color: Colors.white),),
                           TextButton(
                             onPressed: (){
                               Navigator.push(context, MaterialPageRoute(builder: (context) => MyLogin()));

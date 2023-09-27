@@ -1,136 +1,138 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+import 'package:movie_app/Screens/MySearchBar.dart';
+import 'package:movie_app/Screens/ViewAll.dart';
+import 'package:movie_app/UI/TextStyle.dart';
+import 'package:movie_app/backend/backend.dart';
+
+
+class Search extends StatefulWidget {
+  const Search({super.key});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<Search> createState() => _SearchState();
 }
 
-class _HomepageState extends State<Homepage> {
-  TextEditingController search =TextEditingController();
-
-
-
-
-
+class _SearchState extends State<Search> {
+  List<Color> manyColors = [
+    Colors.pink,
+    Colors.green,
+    Colors.blue,
+    Colors.yellowAccent,
+    Colors.brown,
+    Colors.purple,
+    Colors.orange,
+    Colors.pink,
+    Colors.orange,
+    Colors.green,
+    Colors.blueGrey,
+    Colors.lightGreen
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-
-
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
-          Column(
-            children: [
-              SizedBox(height: 40,),
-              Padding(
-                padding: const EdgeInsets.only(right: 270),
-                child: Text("Search", style: TextStyle(fontSize: 30),),
-              ),
-              SizedBox(height: 10,),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(controller: search,
+          InkWell(
+            onTap: (){
+              Navigator.push(context,
+                  MaterialPageRoute(
+                      builder: (context)=>MySearchBar()));
+            },
+            child: Container(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10.0,right: 10,left: 10),
+                child: TextField(
+                  enabled: false,
+
                   decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        onPressed: () {}, icon: Icon(Icons.search),),
-                      hintText: ("what do you want to listen to ?"),
 
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                            width: 3,
-                            color: Colors.black,
-                          )
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                            width: 3,
-                            color: Colors.black,
-                          )
-                      )
-                  ),
-                  cursorColor: Colors.white,
+                    suffixIconColor: Colors.white,
 
-                ),
+                    suffixIcon: IconButton(onPressed: (){},icon: Icon(Icons.search),),
+                   disabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          width: 3,
+                          color: Colors.white,
+                        )
+                    ),
+
+                  ),),
               ),
-              SizedBox(height: 10,),
-              Padding(
-                padding: const EdgeInsets.only(right: 230),
-                child: Text("Browse all", style: TextStyle(fontSize: 30),),
-              )
-            ],),
-          SizedBox(height: 10,),
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.only(top: 180.0),
+            padding: const EdgeInsets.only(top: 90.0),
             child: FutureBuilder(
-              future: getsong(),
+              future: getmovie(),
               builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
+                if(snapshot.hasData) {
                   var data = snapshot.data;
+                  return GridView.builder(
 
-
-                  return ListView.builder(
-
-
-                    itemCount: 10,
-                    itemBuilder: (context, index) {
-                      return Row(
-                        children: [
-
-
-                          Container(
-
-
-                            margin: EdgeInsets.all(8),
-                            height: 100,
-                            width: 180,
-                            color: Colors.yellow,
-
-                            child: Text(data['genres'][index]['name']),
-
-
-                          ),
-
-                          Container(
-                            child: Text("hII"),
-
-                            margin: EdgeInsets.all(8),
-                            height: 100,
-                            width: 180,
-                            color: Colors.red,
-
-                          ),
-
-
-                        ],
-
-
-                      );
-                    },
-
+                      itemCount: manyColors.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 4.0,
+                        mainAxisSpacing: 4.0,
+                        mainAxisExtent: 100,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        String name =
+                        data
+                        ['genres']
+                        [index]
+                        ['name'];
+                        return FutureBuilder(
+                          future: getGenre(data['genres'][index]['id']),
+                          builder: (context, AsyncSnapshot snapshot1) {
+                            if (snapshot1.hasData) {
+                              return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewAll(
+                                                  title: name,
+                                                  data: snapshot1
+                                                      .data['results'],
+                                                )));
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                        color: manyColors[index],
+                                        borderRadius:
+                                        BorderRadius.circular(20)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Center(
+                                          child: Text(name,
+                                              style: title(bold: true))),
+                                    ),
+                                  ));
+                            }
+                            else {
+                              return Container();
+                            }
+                          },
+                        );
+                      }
                   );
                 }
-                return Text("");
+                else {
+                  return Text("");
+                }
+
               },
             ),
-
           ),
-
         ],
       ),
 
     );
-  }
-  getsong()async{
-    var  url='https://api.themoviedb.org/3/genre/movie/list?language=en&api_key=7d1b38486a31ddec36e3b9183959ae39';
-    dynamic response = await http.get(Uri.parse(url));
-    var pick = jsonDecode(response.body.toString());
-    return pick;
   }
 
 }

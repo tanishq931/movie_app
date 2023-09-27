@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:movie_app/Screens/Drawer.dart';
 import 'package:movie_app/Screens/Main_Screen.dart';
+import 'package:movie_app/Screens/Search.dart';
 import 'package:movie_app/UI/TextStyle.dart';
 import 'package:movie_app/backend/backend.dart';
 class HomeScreen extends StatefulWidget {
@@ -13,8 +15,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List _Screens=[
     Main_Screen(),
-    Center(child: Icon(Icons.search,color: Colors.white,),),
-    Center(child: Icon(Icons.menu,color: Colors.white,),),
+    Search(),
+    MyDrawer()
   ];
   @override
   void initState() {

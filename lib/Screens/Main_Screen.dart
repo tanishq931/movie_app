@@ -21,8 +21,6 @@ class _Main_ScreenState extends State<Main_Screen> {
     Colors.deepPurple
   ];
   var imgUrl='https://image.tmdb.org/t/p/original';
-
-  var key = GlobalKey();
   @override
   Widget build(BuildContext context) {
 
@@ -58,7 +56,7 @@ class _Main_ScreenState extends State<Main_Screen> {
                                     Navigator.push(context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                MyMovieDetailPage(data: data['results'][index],)));
+                                                MyMovieDetailPage(data: data['results'][index],name: 'Top Airing',)));
                                   },
                                   child: Stack(
                                     children: [
@@ -66,8 +64,8 @@ class _Main_ScreenState extends State<Main_Screen> {
                                         borderRadius: BorderRadius.circular(
                                             10),
                                         child: Hero(
-                                          key:key ,
-                                          tag: id,
+
+                                          tag: 'Top Airing $id',
                                           child: Image.network(
                                               '$imgUrl${data['results'][index]['backdrop_path']}'),
                                         ),
@@ -134,7 +132,7 @@ class _Main_ScreenState extends State<Main_Screen> {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) =>
                                     ViewAll(
-                                      title: 'Hot Picks', data: data['results'],)));
+                                      title: 'Hot Picks', data: data['results'])));
                           }),
                           CarouselSlider.builder(
                             itemBuilder: (context, index, currindex) {
@@ -144,14 +142,14 @@ class _Main_ScreenState extends State<Main_Screen> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context)=>
-                                              MyMovieDetailPage(data: data['results'][index])));
+                                              MyMovieDetailPage(data: data['results'][index],name: 'Hot Picks',)));
                                 },
                                 child: Stack(
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
                                       child: Hero(
-                                        tag:data['results'][index]['id'],
+                                        tag:'Hot Picks ${data['results'][index]['id']}',
                                         child: Image.network(
                                             '$imgUrl${snapshot
                                                 .data['results'][index]['backdrop_path']}'
@@ -214,6 +212,8 @@ class _Main_ScreenState extends State<Main_Screen> {
                 getCateory(genre:9648,name: 'Mystery'),
                 getCateory(genre:12,name: 'Adventure'),
                 getCateory(genre:27,name: 'Horror'),
+
+
               ],
             ),
           ),
@@ -226,46 +226,47 @@ class _Main_ScreenState extends State<Main_Screen> {
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           var data = snapshot.data;
-          return Column(
-            children: [
-              Partition(name,onPressed: (){
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context)=>ViewAll(title: name,data: data['results'],)
-                    ));
-              }),
-              CarouselSlider.builder(
-                itemBuilder: (context, index, currindex) {
-                  var mid=data['results'][index]['id'];
-                  return InkWell(
-                    onTap: (){
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context)=>MyMovieDetailPage(data: data['results'][index])));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 10.0),
-                      child: Container(
+          return Container(
+            child: Column(
+              children: [
+                Partition(name,onPressed: (){
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context)=>ViewAll(title: name,data: data['results'],)
+                      ));
+                }),
+                CarouselSlider.builder(
+                  itemBuilder: (context, index, currindex) {
+                    var mid=data['results'][index]['id'];
+                    return InkWell(
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context)=>MyMovieDetailPage(data: data['results'][index],name: name,)));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Container(
 
 
-                        child: Hero(
-
-                          tag:mid,
-                          child: Image.network(
-                              '$imgUrl${data['results'][index]['poster_path']}'),
+                          child: Hero(
+                            tag:'$name $mid',
+                            child: Image.network(
+                                '$imgUrl${data['results'][index]['poster_path']}'),
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-                itemCount: colors.length,
-                options: CarouselOptions(
-                    enableInfiniteScroll: false,
-                    viewportFraction: 0.4,
-                    padEnds: false
+                    );
+                  },
+                  itemCount: colors.length,
+                  options: CarouselOptions(
+                      enableInfiniteScroll: false,
+                      viewportFraction: 0.4,
+                      padEnds: false
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         }
         else {

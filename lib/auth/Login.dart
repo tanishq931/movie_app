@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/Screens/HomeScreen.dart';
+import 'package:movie_app/UI/TextStyle.dart';
+import 'package:movie_app/UI/ToastBolte.dart';
 import 'package:movie_app/auth/Reusable.dart';
 import 'package:movie_app/auth/SignUp.dart';
 
@@ -30,7 +32,7 @@ class MyLogin extends StatelessWidget {
                     Container(
 
                       child: Text(
-                        'Welcome to\nCine Samachaar',
+                        'Cine Samachaar',
                         style:  TextStyle(
                             color: Colors.red,
                             fontFamily: 'Netflix',
@@ -74,42 +76,47 @@ class MyLogin extends StatelessWidget {
                                 onPressed: (){
                                   FirebaseAuth.instance.signInWithEmailAndPassword(
                                       email: email.text, password: password.text).then((value) =>
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen())));
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen())))
+                                      .onError((error, stackTrace){
+                                    return Utils().toastmsg(error.toString());
+                                  });
 
                                 }, child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
                               child: Text('LogIn', style: TextStyle(color: Colors.white,),),
                             )),
-                            SizedBox(height: 30),
+                            SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                InkWell(
-                                  onTap: (){},
-                                  child: CircleAvatar(
-                                    radius: 21,
-                                    backgroundColor: Colors.white,
-                                    child:  Icon(Icons.phone_android,
-                                      color: Colors.black,size: 25,),
-                                  ),
-                                ),
-
-
-
-                                SizedBox(width: 40,),
-                                InkWell(
-                                  onTap: ()async{
-                                    await AuthGoogle().signInWithGoogle(context);
-                                  },
-                                  child: CircleAvatar(
-
-                                      radius: 21,
-                                      backgroundColor: Colors.white,
-                                      child: Image.asset('assets/images/google.png',height: 20,)),
-                                )
+                                Container(width:60,child: Divider(color: Colors.white,thickness: 2,)),
+                                Text('  Or Continue with ',style: heading(),),
+                                Container(width:60,child: Divider(color: Colors.white,thickness: 2,)),
                               ],
                             ),
-                            SizedBox(height: 50),
+                            SizedBox(height: 20),
+                            ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(Colors.white),
+
+                                ),
+                                onPressed: () async{
+                                  await AuthGoogle().signInWithGoogle(context);
+                                }, child: Padding(
+                                       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                                       child: Row(
+                                         mainAxisAlignment: MainAxisAlignment.center,
+                                         mainAxisSize :MainAxisSize.min ,
+                                         children: [
+                                           SizedBox(width: 8,),
+                                           Image.asset('assets/images/google.png',height: 20,),
+                                           SizedBox(width: 8,),
+
+                                         ],
+                                       )
+                                ,),
+                            ),
+                            SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

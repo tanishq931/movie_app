@@ -3,21 +3,23 @@ import 'package:movie_app/UI/TextStyle.dart';
 import 'package:movie_app/backend/backend.dart';
 
 class MyMovieDetailPage extends StatefulWidget {
-  MyMovieDetailPage({super.key,required this.data});
+  MyMovieDetailPage({super.key,required this.data,required this.name});
 
   dynamic data;
+  String name;
 
 
 
 
   @override
-  State<MyMovieDetailPage> createState() => _MyMovieDetailPageState(data: data);
+  State<MyMovieDetailPage> createState() => _MyMovieDetailPageState(data: data,name: name);
 }
 
 class _MyMovieDetailPageState extends State<MyMovieDetailPage> {
 
-  _MyMovieDetailPageState({this.data});
+  _MyMovieDetailPageState({this.data,required this.name});
   var data;
+  String name;
   String? img;
   String? movietitle;
   var ratings;
@@ -68,7 +70,7 @@ class _MyMovieDetailPageState extends State<MyMovieDetailPage> {
                 child: Container(
                   width: width-10,
                   child: Hero(
-                      tag: data['id'],
+                      tag: '$name ${data['id']}',
                       child: Image.network("$imgUrl$img",fit:BoxFit.cover,)),
                 ),
               ),
@@ -88,15 +90,18 @@ class _MyMovieDetailPageState extends State<MyMovieDetailPage> {
                     padding: const EdgeInsets.only(top: 10,left: 10,right: 10,bottom: 40),
                     child: Column(
                       children: [
-                        Container(padding:EdgeInsets.only(left: 10,top: 15),height:50,width:width,child: Text("$movietitle",overflow:TextOverflow.fade,style: TextStyle(color: Colors.white,fontSize: 24,fontWeight: FontWeight.bold),)),
+                        Padding(
+                            padding:EdgeInsets.only(left: 10,top: 15),
+
+                            child: Text("$movietitle",overflow:TextOverflow.fade,maxLines: 2,style: heading(size: 24),)),
                         const SizedBox(height: 1),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Padding(padding: EdgeInsets.only(left: 10),child: Text("Original Language. $origlang",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.w500),)),
+                            Padding(padding: EdgeInsets.only(left: 10),child: Text("Original Language:   ${origlang!.toUpperCase()}",style: heading(size: 15))),
                             Row(
                               children: [
-                                Text("$ratings",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.w500) ,),
+                                Text("$ratings",style: heading(size: 16) ,),
                                 SizedBox(width: 5,),
                                 Icon(Icons.star,color: Colors.orange,),
                               ],
@@ -107,7 +112,7 @@ class _MyMovieDetailPageState extends State<MyMovieDetailPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Padding(padding: EdgeInsets.only(left: 10),child: Text("$daterel",style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.w500),)),
+                            Padding(padding: EdgeInsets.only(left: 10),child: Text("$daterel",style: heading(size: 16))),
                             Row(
                               children: [
                                 Column(
@@ -121,7 +126,7 @@ class _MyMovieDetailPageState extends State<MyMovieDetailPage> {
                                       ),
                                     ),
                                     Padding(
-                                        padding:EdgeInsets.only(left: 25),child: Text("WatchList",style: TextStyle(color: Colors.white,fontSize: 12,),)),
+                                        padding:EdgeInsets.only(left: 25),child: Text("WatchList",style: heading(size: 12),)),
                                   ],
                                 ),
                                 Column(
@@ -136,7 +141,7 @@ class _MyMovieDetailPageState extends State<MyMovieDetailPage> {
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(left: 30),
-                                      child: Text("Share",style: TextStyle(color: Colors.white,fontSize: 12,),
+                                      child: Text("Share",style:heading(size: 12),
                                       ),
                                     ),
                                   ],
@@ -159,8 +164,8 @@ class _MyMovieDetailPageState extends State<MyMovieDetailPage> {
                               builder: (context,AsyncSnapshot snapshot) {
 
                                 if(snapshot.hasData){
-                                  return ListView.builder(itemBuilder: (context,index){
                                     var data = snapshot.data;
+                                  return ListView.builder(itemBuilder: (context,index){
 
                                     return Column(
                                       children: [
@@ -173,16 +178,15 @@ class _MyMovieDetailPageState extends State<MyMovieDetailPage> {
                                         SizedBox(height: 2,),
                                         Container(height: height / 52,
                                           width: width / 4,
-                                          child: Text("${data['credits']['cast'][index]['original_name']}", style: TextStyle(color: Colors.white,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold),
+                                          child: Text("${data['credits']['cast'][index]['original_name']}", style:heading(size: 12),
                                             textAlign: TextAlign.center,
                                             softWrap: true,
-                                            overflow: TextOverflow.fade,),)
-                                      ],
+                                           ),)
+                                      ]
                                     );
 
-                                  },itemCount: 5,scrollDirection: Axis.horizontal,
+                                  },itemCount:data['credits']['cast'].length<4?data['credits']['cast'].length:4,
+                                    scrollDirection: Axis.horizontal,
                                   );
 
                                 }

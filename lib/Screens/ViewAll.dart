@@ -42,39 +42,15 @@ class _ViewAllState extends State<ViewAll> {
                   Navigator.push(context,
                       MaterialPageRoute(
                           builder: (context)=>
-                              MyMovieDetailPage(data: data[index])));
+                              MyMovieDetailPage(data: data[index],name: title,)));
                 },
                 child: Hero(
-                  tag: data[index]['id'],
+                  tag: '$title ${data[index]['id']}',
                   child: movies(path:data![index]['poster_path']),
                 ),
               );
             }),
-        // child: ListView.builder(
-        //     itemCount: (data.length/3).toInt()-1,
-        //       itemBuilder: (context,index){
-        //         return Padding(
-        //           padding: const EdgeInsets.only(bottom: 10),
-        //           child: Row(
-        //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //             children: [
-        //              InkWell(
-        //                           onTap:(){
-        //                             print(counter);
-        //                             // Navigator.push(
-        //                             //     context,
-        //                             //     MaterialPageRoute(
-        //                             //         builder: (context)=>
-        //                             //             MyMovieDetailPage(data: data[counter])));
-        //                           },
-        //                           child: movies(path:data![counter++]['poster_path'])),
-        //
-        //
-        //             ],
-        //           ),
-        //         );
-        //
-        //   }),
+
       ),
     );
   }

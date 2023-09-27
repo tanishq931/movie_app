@@ -39,3 +39,16 @@ getMovieParticularGenre(int id) async{
   return movies;
 
 }
+getmovie() async{
+  var  url='https://api.themoviedb.org/3/genre/movie/list?language=en&api_key=7d1b38486a31ddec36e3b9183959ae39';
+  dynamic response = await http.get(Uri.parse(url));
+  var pick = jsonDecode(response.body.toString());
+  return pick;
+}
+
+getSearch( String controller) async{
+  var url='https://api.themoviedb.org/3/search/movie?query=${controller}&api_key=7d1b38486a31ddec36e3b9183959ae39';
+  dynamic response = await http.get(Uri.parse(url));
+  var action = jsonDecode(response.body.toString());
+  return action;
+}
